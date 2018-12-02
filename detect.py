@@ -38,6 +38,10 @@ from corpus import Token
 from vocabulary import vocabulary
 from training_utils import Sentences, one_hot_batch
 
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
 
 THIS_DIRECTORY = Path(__file__).parent
 TOKENIZE_JS_BIN = ('node', str(THIS_DIRECTORY / 'tokenize-js'))
