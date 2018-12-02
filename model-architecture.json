@@ -1,0 +1,50 @@
+---
+keras_version: 1.1.1
+class_name: Sequential
+config:
+- class_name: LSTM
+  config:
+    batch_input_shape:
+    - 0
+    - 20
+    - 100
+    consume_less: cpu
+    b_regularizer: 
+    name: lstm_1
+    activation: tanh
+    input_dim: 100
+    init: glorot_uniform
+    stateful: false
+    dropout_U: 0
+    U_regularizer: 
+    return_sequences: false
+    W_regularizer: 
+    go_backwards: false
+    forget_bias_init: one
+    unroll: false
+    inner_init: orthogonal
+    inner_activation: hard_sigmoid
+    trainable: true
+    input_dtype: float32
+    input_length: 
+    output_dim: 300
+    dropout_W: 0
+- class_name: Dense
+  config:
+    activity_regularizer: 
+    b_regularizer: 
+    trainable: true
+    output_dim: 100
+    activation: linear
+    W_regularizer: 
+    input_dim: 
+    b_constraint: 
+    init: glorot_uniform
+    bias: true
+    W_constraint: 
+    name: dense_1
+- class_name: Activation
+  config:
+    name: activation_1
+    activation: softmax
+    trainable: true

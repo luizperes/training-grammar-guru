@@ -29,7 +29,7 @@ from collections import namedtuple
 from functools import total_ordering
 
 import numpy as np
-from keras.models import model_from_json
+from keras.models import model_from_json, model_from_yaml
 from blessings import Terminal
 
 from unvocabularize import unvocabularize
@@ -102,7 +102,7 @@ class Model:
     @classmethod
     def from_filenames(cls, *, architecture=None, weights=None, **kwargs):
         with open(architecture) as archfile:
-            model = model_from_json(archfile.read())
+            model = model_from_yaml(archfile.read())
         model.load_weights(weights)
 
         return cls(model, **kwargs)
