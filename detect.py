@@ -38,6 +38,9 @@ from corpus import Token
 from vocabulary import vocabulary
 from training_utils import Sentences, one_hot_batch
 
+import os
+import tensorflow as tf
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 def warn(*args, **kwargs):
     pass
 import warnings
