@@ -1,26 +1,31 @@
-Grammar Guru
-============
+# Grammar Guru
+> Detects and fixes Javascript syntax errors.
 
-Detects and fixes syntax errors. Currently works with JavaScript.
-
-Install
--------
-
-Requires Python 3.5.
-
-Activate a virtualenv, if that's your thing. Then,
-
-    pip install -r requirements.txt
-
-Download the [model data] and copy the `*.h5` and `*.json` files into
-the directory you'll run the tool.
+### Installiing
+Requires:
+  - Python 3.6 `// other versions won't work (because of Tensorflow)`
+  - Node.JS >= 4.0
+  - Esprima
+    - `npm i esprima`
+  - Tensorflow
+    - `pip install --upgrade tensorflow`
+  - pip
+  - virtualenv (optional)
+    - `pip install virtualenv`
+    - Follow [these](virtualenv) instructions.
+  - Install dependencies
+    - `pip install -r requirements.txt`
+  - Download the [model data] and copy the `*.h5` and `*.json` files into the root directory (`/path/to/training-grammar-guru`).
 
 [model data]: https://archive.org/details/lstm-javascript-tiny
 
+#### virtualenv
+If you are using `virtualenv`, follow the instructions above, otherwise skip it.
+- `cd /path/to/training-grammar-guru`
+- `virtualenv . -p /home/example_username/opt/python-3.6/bin/python3`
+- `source ./bin/activate`
 
-Usage
------
-
+### Usage
 To suggest a fix for a file:
 
     $ ./detect.py suggest my-incorrect-file.js
@@ -34,9 +39,7 @@ To dump the model's token-by-token consensus about the file:
     $ ./detect.py dump my-incorrect-file.js
 
 
-License
--------
-
+### License
 Copyright 2016 Eddie Antonio Santos <easantos@ualberta.ca>
 
 Licensed under the Apache License, Version 2.0 (the "License");
