@@ -9,6 +9,11 @@
 # ----------------------
 # Table source-file | hash | code
 # ----------------------
+# ....
+# ----------------------
+
+# The number of repos download was 8400
+
 import sqlite3
 import sys
 
