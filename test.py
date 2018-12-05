@@ -2,7 +2,11 @@ import os
 import sys
 import subprocess
 import numpy as np
+import random
+from collections import namedtuple
+
 import detect
+from vocabulary import vocabulary
 
 EVAL_DIR = str(detect.THIS_DIRECTORY / 'evaluation')
 SOURCE_DIR = 'source'
@@ -12,10 +16,10 @@ architecture = str(detect.THIS_DIRECTORY / 'model-architecture.json')
 weights_forwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.5.h5')
 weights_backwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.backwards.5.h5')
 
-def get_common(filename):
-    with detect.synthetic_file(filename) as f:
-        tokens = detect.tokenize_file(f)
+TKOperation = namedtuple('TKOperation',
+                        'old_token position op')
 
+def get_common(tokens):
     file_vector = detect.vectorize_tokens(tokens)
     forwards_model = detect.Model.from_filenames(architecture=architecture,
                                                  weights=weights_forwards,
@@ -29,6 +33,31 @@ def get_common(filename):
                          file_vector,
                          tokens,
                          filename)
+
+def mutate(fStr):
+    valid = True
+    tokens = []
+    operation = None
+    new_str = ''
+    while valid:
+        op = random.randint(0, 3)
+        tk = detect.id_to_token(random.randint(0, len(vocabulary)))
+        with detect.synthetic_file(fStr) as f:
+            tokens = detect.tokenize_file(f)
+        pos = random.randint(0, len(tokens))
+        operation = TKOperation(tokens[pos], pos, op)
+        if (op == 0): # insert token
+            tokens.insert(pos, tk)
+        elif (op == 1): # delete token
+            tokens.pop(pos)
+        else: # replace token
+            tokens[pos] = tk
+        new_str = detect.tokens_to_source_code(tokens)
+        valid = detect.check_syntax(new_str)
+
+    with detect.synthetic_file(new_str) as f:
+        tokens = detect.tokenize_file(f)
+    return (tokens, operation)
 
 def test(db, n, iter, reset):
     answers = np.zeros(n)
@@ -49,9 +78,10 @@ def test(db, n, iter, reset):
         fStr = f.read()
         f.close()
         for _ in range(0, iter):
-            print(fStr)
-            common = get_common(fStr)
-            print("file" + file)
+            (mutant, operation) = mutate(fStr)
+            print(str(operation))
+            #common = get_common(mutant)
+            #print("file" + file)
         
 
     # for each file, random tests
