@@ -362,8 +362,10 @@ def id_to_token(token_id):
         return tokenize_file(file_obj)[0]
 
 
-def suggest(**kwargs):
-    common = common_args(**kwargs)
+def suggest(common=None, test=False, **kwargs):
+    if common is None:
+        common = common_args(**kwargs)
+
     if check_syntax(tokens_to_source_code(common.tokens)):
         print("No need to fix: Already syntactically correct!")
         return
@@ -409,6 +411,9 @@ def suggest(**kwargs):
         # Assume a deletion. Let's try inserting some tokens.
         fixes.try_insert(pos, id_to_token(forwards_predictions[pos]))
         fixes.try_insert(pos, id_to_token(backwards_predictions[pos]))
+
+    if test:
+        return fixes
 
     if not fixes:
         t = Terminal()

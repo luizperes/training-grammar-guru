@@ -61,6 +61,8 @@ def mutate(fStr):
     return (tokens, operation)
 
 def predict(common):
+    fixes = detect.suggest(common=common, test=True)
+    print(str(fixes))
     return 1
 
 def test(db, n, iter, reset):
