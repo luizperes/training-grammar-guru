@@ -108,3 +108,5 @@ extra-rules.mk
 include/
 node_modules/
 package-lock.json
+
+.vscode
