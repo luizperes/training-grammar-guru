@@ -162,6 +162,10 @@ def mean_reciprocal_rank(ranks):
     return sum(1.0 / rank for rank in ranks) / len(ranks)
 
 
+def mean_reciprocal_rank2(ranks):
+    return sum(rank for rank in ranks) / len(ranks)
+
+
 def common_args(*, filename=None,
                 architecture=None,
                 weights_forwards=None, weights_backwards=None,
@@ -237,10 +241,10 @@ def format_line(tokens, insert_space_before=None):
 
 
 class Remove:
-    def __init__(self, pos, tokens, try_score):
+    def __init__(self, pos, tokens, rank_score):
         self.pos = pos
         self.tokens = tokens
-        self.try_score = try_score
+        self.rank_score = rank_score
 
     @property
     def token(self):
@@ -270,11 +274,11 @@ class Remove:
 
 
 class Insert:
-    def __init__(self, token, pos, tokens, try_score):
+    def __init__(self, token, pos, tokens, rank_score):
         self.token = token
         assert 1 < pos < len(tokens)
         self.tokens = tokens
-        self.try_score = try_score
+        self.rank_score = rank_score
 
         # Determine if it should be an insert after or an insert before.
         # This depends on whether the token straddles a line.
@@ -332,18 +336,18 @@ class Fixes:
         self.offset = offset
         self.fixes = []
 
-    def try_remove(self, index, try_score):
+    def try_remove(self, index, rank_score):
         pos = index + self.offset
         suggestion = self.tokens[:pos] + self.tokens[pos + 1:]
         if check_syntax(tokens_to_source_code(suggestion)):
-            self.fixes.append(Remove(pos, self.tokens, try_score))
+            self.fixes.append(Remove(pos, self.tokens, rank_score))
 
-    def try_insert(self, index, new_token, try_score):
+    def try_insert(self, index, new_token, rank_score):
         assert isinstance(new_token, Token)
         pos = index + self.offset
         suggestion = self.tokens[:pos] + [new_token] + self.tokens[pos:]
         if check_syntax(tokens_to_source_code(suggestion)):
-            self.fixes.append(Insert(new_token, pos, self.tokens, try_score))
+            self.fixes.append(Insert(new_token, pos, self.tokens, rank_score))
 
     def __bool__(self):
         return len(self.fixes) > 0
@@ -406,13 +410,13 @@ def suggest(common=None, test=False, **kwargs):
     least_agreements.sort()
     for idx, disagreement in enumerate(least_agreements[:3]):
         pos = disagreement.index
-        try_score = 1/(idx + 1)
+        rank_score = 1/(idx + 1)
         # Assume an addition. Let's try removing some tokens.
-        fixes.try_remove(pos, try_score)
+        fixes.try_remove(pos, rank_score)
 
         # Assume a deletion. Let's try inserting some tokens.
-        fixes.try_insert(pos, id_to_token(forwards_predictions[pos]), try_score)
-        fixes.try_insert(pos, id_to_token(backwards_predictions[pos]), try_score)
+        fixes.try_insert(pos, id_to_token(forwards_predictions[pos]), rank_score)
+        fixes.try_insert(pos, id_to_token(backwards_predictions[pos]), rank_score)
 
     if test:
         return fixes

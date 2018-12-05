@@ -60,10 +60,14 @@ def mutate(fStr):
         tokens = detect.tokenize_file(f)
     return (tokens, operation)
 
-def predict(common):
+def predict(common, secret):
+    # TODO: separate true fix, valid fix and no fix using the secret! :)
     fixes = detect.suggest(common=common, test=True)
-    print(str(fixes))
-    return 1
+    if not fixes:
+        return 0
+    else:
+        for fix in fixes:
+            return fix.rank_score
 
 def test(db, n, iter, reset):
     ranks = np.zeros(n)
@@ -85,16 +89,16 @@ def test(db, n, iter, reset):
         f.close()
         
         print('Calculating MRR ' + file + '...')
-        ranks_file = np.zeros(iter)
+        ranks_file = []
         for i in range(0, iter):
-            (mutant, operation) = mutate(fStr)
+            (mutant, secret) = mutate(fStr)
             common = get_common(mutant, file)
-            ranks_file[i] = predict(common)
-        rank_file = detect.mean_reciprocal_rank(ranks_file)
+            ranks_file.append(predict(common, secret))
+        rank_file = detect.mean_reciprocal_rank2(ranks_file)
         ranks[idx] = rank_file
         print('Rank MRR ' + file + ':', rank_file)
     
-    print("Final MRR: ", detect.mean_reciprocal_rank(ranks))
+    print("Final MRR: ", detect.mean_reciprocal_rank2(ranks))
 
 # argv[1] Database path
 # argv[2] number of files
