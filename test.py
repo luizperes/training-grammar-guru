@@ -1,10 +1,11 @@
+import os
 import sys
 import subprocess
 import numpy as np
 import detect
 
 EVAL_DIR = str(detect.THIS_DIRECTORY / 'evaluation')
-SOURCE_DIR = EVAL_DIR + '/source'
+SOURCE_DIR = 'source'
 RANDOM_FILE_BIN = ('python', EVAL_DIR + '/random_file.py')
 
 architecture = str(detect.THIS_DIRECTORY / 'model-architecture.json')
@@ -29,20 +30,36 @@ def get_common(filename):
                          tokens,
                          filename)
 
-def test(db, n):
+def test(db, n, iter, reset):
     answers = np.zeros(n)
 
-    print('Extracting files from database...')
-    LOAD_FILES_BIN = (*RANDOM_FILE_BIN, db, str(n))
-    subprocess.run(LOAD_FILES_BIN, stdout=subprocess.PIPE)
-    print("Files extracted.")
+    if reset:
+        print('Extracting files from database...')
+        LOAD_FILES_BIN = (*RANDOM_FILE_BIN, db, str(n))
+        subprocess.run(LOAD_FILES_BIN, stdout=subprocess.PIPE)
+        print("Files extracted.")
     
-    # load files in memory
+    lst_files = []
+    for _, _, files in os.walk(SOURCE_DIR):
+        for filename in files:
+            lst_files.append(filename)
+    
+    for file in lst_files:
+        for _ in range(0, iter):
+            common = get_common(SOURCE_DIR + '/' + file)
+            print("file" + file)
+
     # for each file, random tests
     # calc MRR
     # calc total
 
 # argv[1] Database path
 # argv[2] number of files
+# argv[3] number of iterations
+# argv[4] should reset test files
 if __name__ == '__main__':
-    test(sys.argv[1], int(sys.argv[2]))
+    db = sys.argv[1]
+    n = int(sys.argv[2])
+    iter = int(sys.argv[3])
+    reset = int(sys.argv[4]) == 1
+    test(db, n, iter, reset)
