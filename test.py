@@ -4,6 +4,8 @@ import subprocess
 import numpy as np
 import random
 from collections import namedtuple
+import argparse
+from pathlib import Path
 
 import detect
 from vocabulary import vocabulary
@@ -69,7 +71,7 @@ def predict(common, secret):
         for fix in fixes:
             return fix.rank_score
 
-def test(db, n, iter, reset):
+def test(*, n=None, reset=None, iter=None, **kwargs):
     ranks = np.zeros(n)
 
     if reset:
@@ -97,16 +99,31 @@ def test(db, n, iter, reset):
         rank_file = detect.mean_reciprocal_rank2(ranks_file)
         ranks[idx] = rank_file
         print('Rank MRR ' + file + ':', rank_file)
-    
+    print(str(ranks))
     print("Final MRR: ", detect.mean_reciprocal_rank2(ranks))
+
+def add_common_args(parser):
+    parser.add_argument('db', nargs='?', type=Path,
+                        default=Path('/dev/stdin'))
+    parser.add_argument('--n-files', type=int,
+                        default=2, dest='n')
+    parser.add_argument('--iter', type=int,
+                        default=5)
+    parser.add_argument('--reset', type=bool,
+                        default=False)
+
+parser = argparse.ArgumentParser()
+add_common_args(parser)
+parser.set_defaults(func=test)
 
 # argv[1] Database path
 # argv[2] number of files
 # argv[3] number of iterations
 # argv[4] should reset test files
 if __name__ == '__main__':
-    db = sys.argv[1]
-    n = int(sys.argv[2])
-    iter = int(sys.argv[3])
-    reset = int(sys.argv[4]) == 1
-    test(db, n, iter, reset)
+    args = parser.parse_args()
+    if args.func:
+        args.func(**vars(args))
+    else:
+        parser.print_usage()
+        exit(-1)
