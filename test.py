@@ -41,10 +41,11 @@ def mutate(fStr):
     new_str = ''
     while valid:
         op = random.randint(0, 2)
-        tk = detect.id_to_token(random.randint(0, len(vocabulary) - 2))
+        # ignore /*<start>*/ and /*<end>*/ tokens
+        tk = detect.id_to_token(random.randint(1, len(vocabulary) - 2))
         with detect.synthetic_file(fStr) as f:
             tokens = detect.tokenize_file(f)
-        pos = random.randint(0, len(tokens) - 1)
+        pos = random.randint(1, len(tokens) - 2)
         operation = TKOperation(tokens[pos], pos, op)
         if (op == 0): # insert token
             tokens.insert(pos, tk)
