@@ -13,8 +13,8 @@ weights_forwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.5.h5')
 weights_backwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.backwards.5.h5')
 
 def get_common(filename):
-    with open(str(filename), 'rt', encoding='UTF-8') as script:
-        tokens = detect.tokenize_file(script)
+    with detect.synthetic_file(filename) as f:
+        tokens = detect.tokenize_file(f)
 
     file_vector = detect.vectorize_tokens(tokens)
     forwards_model = detect.Model.from_filenames(architecture=architecture,
@@ -45,9 +45,14 @@ def test(db, n, iter, reset):
             lst_files.append(filename)
     
     for file in lst_files:
+        f = open(SOURCE_DIR + '/' + file, 'r')
+        fStr = f.read()
+        f.close()
         for _ in range(0, iter):
-            common = get_common(SOURCE_DIR + '/' + file)
+            print(fStr)
+            common = get_common(fStr)
             print("file" + file)
+        
 
     # for each file, random tests
     # calc MRR
