@@ -12,7 +12,7 @@ Requires:
   - pip
   - virtualenv (optional)
     - `pip install virtualenv`
-    - Follow [these](virtualenv) instructions.
+    - Follow [these](#virtualenv) instructions.
   - Install dependencies
     - `pip install -r requirements.txt`
   - Download the [model data] and copy the `*.h5` and `*.json` files into the root directory (`/path/to/training-grammar-guru`).
