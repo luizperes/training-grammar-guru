@@ -237,9 +237,10 @@ def format_line(tokens, insert_space_before=None):
 
 
 class Remove:
-    def __init__(self, pos, tokens):
+    def __init__(self, pos, tokens, try_score):
         self.pos = pos
         self.tokens = tokens
+        self.try_score = try_score
 
     @property
     def token(self):
@@ -269,10 +270,11 @@ class Remove:
 
 
 class Insert:
-    def __init__(self, token, pos, tokens):
+    def __init__(self, token, pos, tokens, try_score):
         self.token = token
         assert 1 < pos < len(tokens)
         self.tokens = tokens
+        self.try_score = try_score
 
         # Determine if it should be an insert after or an insert before.
         # This depends on whether the token straddles a line.
@@ -330,18 +332,18 @@ class Fixes:
         self.offset = offset
         self.fixes = []
 
-    def try_remove(self, index):
+    def try_remove(self, index, try_score):
         pos = index + self.offset
         suggestion = self.tokens[:pos] + self.tokens[pos + 1:]
         if check_syntax(tokens_to_source_code(suggestion)):
-            self.fixes.append(Remove(pos, self.tokens))
+            self.fixes.append(Remove(pos, self.tokens, try_score))
 
-    def try_insert(self, index, new_token):
+    def try_insert(self, index, new_token, try_score):
         assert isinstance(new_token, Token)
         pos = index + self.offset
         suggestion = self.tokens[:pos] + [new_token] + self.tokens[pos:]
         if check_syntax(tokens_to_source_code(suggestion)):
-            self.fixes.append(Insert(new_token, pos, self.tokens))
+            self.fixes.append(Insert(new_token, pos, self.tokens, try_score))
 
     def __bool__(self):
         return len(self.fixes) > 0
@@ -402,15 +404,15 @@ def suggest(common=None, test=False, **kwargs):
 
     # For the top disagreements, synthesize fixes.
     least_agreements.sort()
-    for disagreement in least_agreements[:3]:
+    for idx, disagreement in enumerate(least_agreements[:3]):
         pos = disagreement.index
-
+        try_score = 1/(idx + 1)
         # Assume an addition. Let's try removing some tokens.
-        fixes.try_remove(pos)
+        fixes.try_remove(pos, try_score)
 
         # Assume a deletion. Let's try inserting some tokens.
-        fixes.try_insert(pos, id_to_token(forwards_predictions[pos]))
-        fixes.try_insert(pos, id_to_token(backwards_predictions[pos]))
+        fixes.try_insert(pos, id_to_token(forwards_predictions[pos]), try_score)
+        fixes.try_insert(pos, id_to_token(backwards_predictions[pos]), try_score)
 
     if test:
         return fixes
