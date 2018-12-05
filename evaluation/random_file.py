@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 import sqlite3
 
 FOLDER = 'source'
@@ -19,5 +20,8 @@ def get_random_file(db, n):
 
 if __name__ == '__main__':
     if not os.path.exists(FOLDER):
+        os.makedirs(FOLDER)
+    else:
+        shutil.rmtree(FOLDER)
         os.makedirs(FOLDER)
     get_random_file(sys.argv[1], sys.argv[2])
