@@ -14,7 +14,7 @@ def get_random_file(db, n):
         row = cursor.fetchall()[0]
         cursor.execute("SELECT source FROM source_file WHERE hash = \'" + row[0] + "\';")
         row = cursor.fetchall()[0]
-        file.write(row[0])
+        file.write(row[0].decode('UTF-8'))
         print('copied file ' + str(i))
         file.close()
 

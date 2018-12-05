@@ -1,6 +1,11 @@
+import sys
+import subprocess
+import numpy as np
 import detect
 
-SOURCE_DIR = str(detect.THIS_DIRECTORY / 'evaluation/source')
+EVAL_DIR = str(detect.THIS_DIRECTORY / 'evaluation')
+SOURCE_DIR = EVAL_DIR + '/source'
+RANDOM_FILE_BIN = ('python', EVAL_DIR + '/random_file.py')
 
 architecture = str(detect.THIS_DIRECTORY / 'model-architecture.json')
 weights_forwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.5.h5')
@@ -24,6 +29,20 @@ def get_common(filename):
                          tokens,
                          filename)
 
+def test(db, n):
+    answers = np.zeros(n)
+
+    print('Extracting files from database...')
+    LOAD_FILES_BIN = (*RANDOM_FILE_BIN, db, str(n))
+    subprocess.run(LOAD_FILES_BIN, stdout=subprocess.PIPE)
+    print("Files extracted.")
+    
+    # load files in memory
+    # for each file, random tests
+    # calc MRR
+    # calc total
+
+# argv[1] Database path
+# argv[2] number of files
 if __name__ == '__main__':
-    common = get_common(detect.SOURCE_DIR + "/0.js")
-    print(str(common))
+    test(sys.argv[1], int(sys.argv[2]))

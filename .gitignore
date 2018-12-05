@@ -103,7 +103,7 @@ model-architecture.json
 
 *.DS_Store
 bin
-evaluation/source
+source
 extra-rules.mk
 include/
 node_modules/
