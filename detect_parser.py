@@ -10,13 +10,16 @@ import detect
 
 CHECK_SYNTAX_THROW_BIN = (*detect.TOKENIZE_JS_BIN, '--check-syntax-throw')
 
-class SyntaxError(namedtuple('SyntaxError', 'message')):
+class SyntaxError(namedtuple('SyntaxError', 'message line token_clue')):
     @classmethod
     def from_json(cls, obj):
         """
         Converts the JSON error into an error object
         """
-        return SyntaxError(message=obj['error'])
+        lst = obj['error'].split()
+        return SyntaxError(message=obj['error'],
+                           line=lst[2].split(':')[0],
+                           token_clue=lst[-1])
 
     def __str__(self):
         return self.message
@@ -40,8 +43,6 @@ def check_syntax_throw(*, filename=None, **kwargs):
     if (status.returncode != 0):
         j = json.loads(status.stdout.decode('UTF-8'))
         err = SyntaxError.from_json(j)
-
-    print(err)
 
     return (err, status.returncode == 0)
 
