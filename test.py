@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 import subprocess
@@ -79,18 +81,17 @@ def test(*, n=None, reset=None, iter=None, **kwargs):
         LOAD_FILES_BIN = (*RANDOM_FILE_BIN, db, str(n))
         subprocess.run(LOAD_FILES_BIN, stdout=subprocess.PIPE)
         print("Files extracted.")
-    
+
     lst_files = []
     for _, _, files in os.walk(SOURCE_DIR):
         for filename in files:
             lst_files.append(filename)
-    
+
     for idx, file in enumerate(lst_files):
-        f = open(SOURCE_DIR + '/' + file, 'r')
-        fStr = f.read()
-        f.close()
-        
-        print('Calculating MRR ' + file + '...')
+        with open(SOURCE_DIR + '/' + file, 'r') as f:
+            fStr = f.read()
+
+        print('Calculating MRR of ' + file + '...')
         ranks_file = []
         for i in range(0, iter):
             (mutant, secret) = mutate(fStr)
