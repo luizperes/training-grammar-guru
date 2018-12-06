@@ -330,6 +330,45 @@ class Insert:
         return '\n'.join((msg, line, arrow, suggestion))
 
 
+class Substitute:
+    def __init__(self, token, pos, tokens, rank_score):
+        self.token = token
+        assert 1 < pos < len(tokens)
+        self.tokens = tokens
+        self.rank_score = rank_score
+        self.pos = pos
+
+    @property
+    def line(self):
+        return self.tokens[self.pos].line
+
+    @property
+    def column(self):
+        return self.tokens[self.pos].column
+
+    @property
+    def insert_before(self):
+        return not self.insert_after
+
+    def __str__(self):
+        t = Terminal()
+
+        pos = self.pos
+        text = self.token.value
+
+        next_token = self.tokens[pos]
+        msg = ("try replacing to '{t.bold}{text}{t.normal}' "
+                "".format_map(locals()))
+
+        line_tokens = get_token_line(self.pos, self.tokens)
+        line = format_line(line_tokens)
+        padding = ' ' * (1 + self.column)
+        arrow = padding + t.bold_green('^')
+        suggestion = padding + t.green(text)
+
+        return '\n'.join((msg, line, arrow, suggestion))
+
+
 class Fixes:
     def __init__(self, tokens, offset=PREFIX_LENGTH):
         self.tokens = tokens
@@ -348,6 +387,13 @@ class Fixes:
         suggestion = self.tokens[:pos] + [new_token] + self.tokens[pos:]
         if check_syntax(tokens_to_source_code(suggestion)):
             self.fixes.append(Insert(new_token, pos, self.tokens, rank_score))
+
+    def try_substitute(self, index, new_token, rank_score):
+        assert isinstance(new_token, Token)
+        pos = index + self.offset
+        suggestion = self.tokens[:pos] + [new_token] + self.tokens[pos + 1:]
+        if check_syntax(tokens_to_source_code(suggestion)):
+            self.fixes.append(Substitute(new_token, pos, self.tokens, rank_score))
 
     def __bool__(self):
         return len(self.fixes) > 0
@@ -408,15 +454,27 @@ def suggest(common=None, test=False, **kwargs):
 
     # For the top disagreements, synthesize fixes.
     least_agreements.sort()
-    for idx, disagreement in enumerate(least_agreements[:3]):
-        pos = disagreement.index
+    for idx, disagreement in enumerate(least_agreements[:15]):
         rank_score = 1/(idx + 1)
+
+        pos = disagreement.index
+        likely_next = id_to_token(forwards_predictions[pos])
+        likely_prev = id_to_token(backwards_predictions[pos])
+
         # Assume an addition. Let's try removing some tokens.
         fixes.try_remove(pos, rank_score)
 
         # Assume a deletion. Let's try inserting some tokens.
-        fixes.try_insert(pos, id_to_token(forwards_predictions[pos]), rank_score)
-        fixes.try_insert(pos, id_to_token(backwards_predictions[pos]), rank_score)
+        fixes.try_insert(pos, likely_next, rank_score)
+        fixes.try_insert(pos, likely_prev, rank_score)
+
+        # Assume a substitution. Let's try swapping the token.
+        fixes.try_substitute(pos, likely_next, rank_score)
+        fixes.try_substitute(pos, likely_prev, rank_score)
+
+        # if we found a fix we don't care anymore
+        if (fixes):
+            break
 
     if test:
         return fixes
