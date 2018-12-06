@@ -42,12 +42,14 @@ def mutate(fStr):
     operation = None
     new_str = ''
     while valid:
-        op = random.randint(0, 2)
+        # try to create less biased random number
+        r = random.sample(range(100, 200), 3)
+        op = r[0] % 3
         # ignore /*<start>*/ and /*<end>*/ tokens
-        tk = detect.id_to_token(random.randint(1, len(vocabulary) - 2))
+        tk = detect.id_to_token((r[1] % (len(vocabulary) - 2)) + 1)
         with detect.synthetic_file(fStr) as f:
             tokens = detect.tokenize_file(f)
-        pos = random.randint(1, len(tokens) - 2)
+        pos = (r[2] % (len(tokens) - 2)) + 1
         operation = TKOperation(tokens[pos], pos, op)
         if (op == 0): # insert token
             tokens.insert(pos, tk)
@@ -71,7 +73,7 @@ def predict(common, secret):
         for fix in fixes:
             return fix.rank_score
 
-def test(*, n=None, reset=None, iter=None, **kwargs):
+def test(*, db=None, n=None, reset=None, iter=None, **kwargs):
     ranks = np.zeros(n)
 
     if reset:
@@ -106,7 +108,7 @@ def add_common_args(parser):
     parser.add_argument('db', nargs='?', type=Path,
                         default=Path('/dev/stdin'))
     parser.add_argument('--n-files', type=int,
-                        default=2, dest='n')
+                        default=1, dest='n')
     parser.add_argument('--iter', type=int,
                         default=5)
     parser.add_argument('--reset', type=bool,
