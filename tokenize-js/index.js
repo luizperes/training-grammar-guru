@@ -28,8 +28,12 @@ if (require.main === module) {
   const source = fs.readFileSync('/dev/stdin', 'utf8');
   const shouldCheckSyntax =
     process.argv.slice(2).indexOf('--check-syntax') >= 0;
+  const shouldCheckSyntaxWithThrow =
+    process.argv.slice(2).indexOf('--check-syntax-throw') >= 0;
   if (shouldCheckSyntax) {
     process.exit(checkSyntax(source) ? 0 : 1);
+  } else if (shouldCheckSyntaxWithThrow) {
+    process.exit(checkSyntaxWithThrow(source) ? 0 : 1);
   } else {
     console.log(JSON.stringify(tokenize(source)));
   }
@@ -59,6 +63,19 @@ function checkSyntax(source) {
     esprima.parse(source, { sourceType });
     return true;
   } catch (e) {
+    return false;
+  }
+}
+
+function checkSyntaxWithThrow(source) {
+  source = removeShebangLine(source);
+  const sourceType = deduceSourceType(source);
+
+  try {
+    esprima.parse(source, { sourceType });
+    return true;
+  } catch (e) {
+    console.log(JSON.stringify({ 'error' : e.toString() }));
     return false;
   }
 }
