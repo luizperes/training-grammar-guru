@@ -18,7 +18,7 @@
 'use strict';
 
 const fs = require('fs');
-const esprima = require('esprima');
+const esprima = require('esprima-dev');
 
 module.exports.tokenize = tokenize;
 module.exports.checkSyntax = checkSyntax;

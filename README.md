@@ -7,6 +7,7 @@ Requires:
   - Node.JS >= 4.0
   - Esprima
     - `npm i esprima`
+    - [Use dev version of Esprima](#use-dev-version-of-esprima)
   - Tensorflow
     - `pip install --upgrade tensorflow`
   - pip
@@ -24,6 +25,13 @@ If you are using `virtualenv`, follow the instructions above, otherwise skip it.
 - `cd /path/to/training-grammar-guru`
 - `virtualenv . -p /home/example_username/opt/python-3.6/bin/python3`
 - `source ./bin/activate`
+
+#### Use dev version of Esprima
+Only the dev version of Esprima is able to [tokenize strings with a leading '/'](https://github.com/jquery/esprima/issues/1895).
+```
+$ ./patch_esprima.sh
+```
+Run this to get `tokenize-js` to use the latest dev version of Esprima.
 
 ### Usage
 To suggest a fix for a file:
