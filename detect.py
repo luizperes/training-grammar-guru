@@ -414,7 +414,7 @@ def id_to_token(token_id):
         return tokenize_file(file_obj)[0]
 
 
-def suggest(common=None, test=False, **kwargs):
+def suggest(common=None, test=False, min_rank=None, **kwargs):
     if common is None:
         common = common_args(**kwargs)
 
@@ -454,7 +454,7 @@ def suggest(common=None, test=False, **kwargs):
 
     # For the top disagreements, synthesize fixes.
     least_agreements.sort()
-    for idx, disagreement in enumerate(least_agreements[:15]):
+    for idx, disagreement in enumerate(least_agreements[:min_rank]):
         rank_score = 1/(idx + 1)
 
         pos = disagreement.index
@@ -646,6 +646,7 @@ def add_common_args(parser):
     parser.add_argument('--weights-backwards', type=Path,
                         default=THIS_DIRECTORY /
                         'javascript-tiny.backwards.5.h5')
+    parser.add_argument('--min-rank', type=int, default=3, dest='min_rank')
 
 
 parser = argparse.ArgumentParser()
