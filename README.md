@@ -29,7 +29,7 @@ If you are using `virtualenv`, follow the instructions above, otherwise skip it.
 #### Use dev version of Esprima
 Only the dev version of Esprima is able to [tokenize strings with a leading '/'](https://github.com/jquery/esprima/issues/1895).
 ```
-$ ./patch_esprima.sh
+$ ./get_dev_esprima.sh
 ```
 Run this to get `tokenize-js` to use the latest dev version of Esprima.
 
