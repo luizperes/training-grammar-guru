@@ -49,6 +49,8 @@
 
 \sectionfont{\fontsize{54}{54}\selectfont}
 
+\usepackage{caption}
+
 \begin{document}
 
 %----------------------------------------------------------------------------------------
@@ -90,7 +92,7 @@ Parsers often fail miserably in helping to find syntax errors. For example:
 
 \color{Black}
 \begin{algorithmic}
-\State $1$ \textincon{\textbf{if} (process.argv.length $>$ 3)} \tab \textit{\color{red} // Missing '\{' }\color{Black}
+\State $1$ \textincon{\textbf{if} (process.argv.length $<$ 3)} \tab \textit{\color{red} // Missing '\{' }\color{Black}
 \State $2$ \tab\tab \textincon{console.error(\color{NavyBlue} 'Not enough args!'}\color{Black});
 \State $3$ \tab\tab \textincon{process.exit(1);}
 \State $4$ \textincon{\}}
@@ -142,8 +144,8 @@ GrammarGuru is a tool created by Santos et al. (Santos EA et al., 2017) that att
  14 & n-gram score at the document level \\
  15-18 & n-gram precision excluding common tokens, n=1...4\\
  19-22 & n-gram recall excluding common tokens, n=1...4\\
- 23-26 & n-gram f-measure excluding stopwords, n=1...4\\
- 27 & average n-gram precision excluding stopwords, n=1...4\\
+ 23-26 & n-gram f-measure excluding common tokens, n=1...4\\
+ 27 & avg n-gram precision excluding common tokens, n=1...4\\
  28 & pos distance of $hyp_1$, $hyp_2$ against parser error $\{-1, 0, 1 \}$\\
  29 & which of $hyp_1$, $hyp_2$ equals parser error token $\{ -1, 0, 1\}$\\
  30 & $hyp_1$ and/or $hyp_2$ fix the syntax error $\{ -1, 0, 1\}$ \\
@@ -156,15 +158,45 @@ GrammarGuru is a tool created by Santos et al. (Santos EA et al., 2017) that att
 \begin{center}
 \includegraphics[width=0.8\linewidth]{proj_img}
 \end{center}
-\section*{Re-ranking}
-15 of the most unnatural tokens in the erroneous JS file are fed to our neural network and re-ranked using the ROSE approach. We perform $15 \choose^{2}$ comparisons per file....
 
 %----------------------------------------------------------------------------------------
 %	Improving GrammarGuru suggestions
 %----------------------------------------------------------------------------------------
 
-\section*{Evaluation}
-
+\section*{Re-ranking process and results}
+For each erroneous JS file, 15 of the most unnatural tokens are fed to our neural network and re-ranked using ROSE.
+\color{Black}
+\begin{algorithmic}
+\State $1$ \textincon{\$form.submit(\color{red}functions\color{Black}(evt) \{} \tab \textit{\color{red} // mistyped keyword }\color{Black}
+\State $2$ \tab\tab ...
+\State $3$ \textincon{\});}
+\end{algorithmic}
+\color{NavyBlue} Output from GrammarGuru before re-ranking:\\\color{Black}
+\begin{tabular}{|p{37cm}}
+\tab \textincon{\textit{\color{red} I don't know how to fix it :C\color{Black}}}\\
+\end{tabular}
+\color{NavyBlue} Output from GrammarGuru after re-ranking:\\\color{Black}
+\begin{tabular}{|p{37cm}}
+\tab \textincon{wrong.js:1:14 try substituting with} \textbf{'function'} \\
+\tab \textincon{\$form.submit(functions(evt) \{}\\
+\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab \textincon{\^{}}\\
+\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab \textincon{\textbf{function}}
+\end{tabular}
+\begin{center}
+\vspace{1cm}
+\begin{tabular}{ |c|c|c| }
+ \hline
+ \textbf{Mutation} & \textbf{GrammarGuru MRR} & \textbf{Our Solution MRR}\\
+ \hline
+ Insertion & 0.52 & \tab \\
+ Deletion & 0.50 & \tab \\
+ Substitution & 0.30 & \tab \\
+ \hline
+\end{tabular}
+\\[6pt]
+\color{Black} mean reciprocal rank results
+\end{center}
+\color{Navy}
 \section*{References}
 \large
 $[1]$ \textbf{Santos EA, Campbell JC, Hindle A, Amaral JN. 2017}. Finding and correcting syntax errors using recurrent neural networks. PeerJ Preprints 5:e3123v1 https://doi.org/10.7287/peerj.preprints.3123v1
