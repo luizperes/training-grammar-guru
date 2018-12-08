@@ -6,7 +6,7 @@
 %
 % The a0poster class was created by:
 % Gerlinde Kettl and Matthias Weiser (tex@kettl.de)
-% 
+%
 % This template has been downloaded from:
 % http://www.LaTeXTemplates.com
 %
@@ -40,12 +40,19 @@
 \usepackage{algpseudocode}
 \newcommand\tab[1][1cm]{\hspace*{#1}}
 
+% For monospaced-font.
+% http://nepsweb.co.uk/docs/progfonts.pdf
+\usepackage{inconsolata}
+\usepackage[T1]{fontenc}
+\newcommand{\textincon}[1]{%
+{\fontfamily{zi4}\selectfont #1}}
+
 \sectionfont{\fontsize{54}{54}\selectfont}
 
 \begin{document}
 
 %----------------------------------------------------------------------------------------
-%	POSTER HEADER 
+%	POSTER HEADER
 %----------------------------------------------------------------------------------------
 
 % The header is divided into two boxes:
@@ -55,10 +62,10 @@
 
 \begin{minipage}[b]{0.75\linewidth}
 \veryHuge \color{NavyBlue} \textbf{Using RNN to fix syntax errors in JavaScript files} \color{Black}\\ % Title
-\Huge\textit{}\\[2cm] % Subtitle
-\huge \textbf{Jordan Siaw, Justin Lew \& Luiz Peres}\\[0.5cm] % Author(s)
+\Huge \textit{}\\[2cm] % Subtitle
+\huge \textbf{Jordan Siaw, Justin Lew, and Luiz Peres}\\[0.5cm] % Author(s)
 \huge SFU School of Computing Science\\[0.4cm] % University/organization
-\Large \texttt{[\color{NavyBlue}'jsiaw'\color{Black}, \color{NavyBlue}'justin\_lew'\color{Black}, \color{NavyBlue}'lperesde']\color{Black}.\color[rgb]{0.435, 0.258, 0.756}map\color{Black}(f \color[rgb]{0.843, 0.227, 0.286}=> \color{Black}f \color[rgb]{0.843, 0.227, 0.286}+ \color{NavyBlue}'@sfu.ca'\color{Black})}\\
+\Large \texttt{[\color{NavyBlue}'jsiaw'\color{Black}, \color{NavyBlue}'jylew'\color{Black}, \color{NavyBlue}'lperesde']\color{Black}.\color[rgb]{0.435, 0.258, 0.756}map\color{Black}(f \color[rgb]{0.843, 0.227, 0.286}=> \color{Black}f \color[rgb]{0.843, 0.227, 0.286}+ \color{NavyBlue}'@sfu.ca'\color{Black})}\\
 \end{minipage}
 %
 \begin{minipage}[b]{0.25\linewidth}
@@ -76,56 +83,59 @@
 %----------------------------------------------------------------------------------------
 
 \color{Navy} % Navy color for the abstract
-
 \section*{The Problem}
-
-\huge Parsers often fail miserably in finding syntax errors
-
 \LARGE
+
+Parsers often fail miserably in helping to find syntax errors. For example:
+
 \color{Black}
 \begin{algorithmic}
-\State $1$ \textbf{if} (process.argv.length $>$ 3) \tab \textit{\color{red} // \{ }\color{Black}
-\State $2$ \tab\tab console.error(\color{NavyBlue}'Not enough args!'\color{Black});
-\State $3$ \tab\tab process.exit(1);
-\State $4$ $\}$
+\State $1$ \textincon{\textbf{if} (process.argv.length $>$ 3)} \tab \textit{\color{red} // Missing '\{' }\color{Black}
+\State $2$ \tab\tab \textincon{console.error(\color{NavyBlue} 'Not enough args!'}\color{Black});
+\State $3$ \tab\tab \textincon{process.exit(1);}
+\State $4$ \textincon{\}}
 \end{algorithmic}
-\color{NavyBlue}Mozilla SpiderMonkey (2016)\\\color{Black}
+
+\color{NavyBlue} Error message from Mozilla SpiderMonkey (2016):\\\color{Black}
 \begin{tabular}{|p{37cm}}
-\tab wrong.js:4: SyntaxError: syntax error:\\
-\tab wrong.js:4: \}\\
-\tab wrong.js:4: \^{}
+\tab \textincon{wrong.js:4: SyntaxError: syntax error:}\\
+\tab \textincon{wrong.js:4: \}}\\
+\tab \textincon{wrong.js:4: \^{}}
 \end{tabular}
-\\\\
-\color{NavyBlue}Node with Google’s V8 JavaScript (2016)\\\color{Black}
+\\
+
+\color{NavyBlue} Error message from Node.js with Google's V8 engine (2016):\\\color{Black}
 \begin{tabular}{|p{37cm}}
-\tab /path/to/wrong.js:6 \tab \textit{\color{red} // line 6 does not exist!\color{Black}}\\
-\tab \});\\
-\tab \^{}\\
-\tab SyntaxError: Unexpected token \}
+\tab \textincon{/path/to/wrong.js:6} \tab \textit{\color{red} // Line 6 doesn't even exist!\color{Black}}\\
+\tab \textincon{\});}\\
+\tab \textincon{\^{}}\\
+\tab \textincon{SyntaxError: Unexpected token \}}
 \end{tabular}
-\huge
+
 %----------------------------------------------------------------------------------------
 %	GrammarGuru
 %----------------------------------------------------------------------------------------
+
 \color{Navy}
 \section*{GrammarGuru}
-\LARGE
-GrammarGuru is a tool created by that seeks to find and fix single token syntax
-errors, using LSTM language models on 10,000 GitHub repos (Santos EA et al., 2017).
+
+GrammarGuru is a tool created by Santos et al. (Santos EA et al., 2017) that attempts to address this problem by finding and fixing single token syntax errors, using LSTM language models on 10,000 GitHub repos. GrammarGuru works great for locating token insertions and deletions. However, it doesn't perform so well when a token is substituted, e.g. when a keyword is mistyped: \texttt{functions} instead of \texttt{function}.
+
 %----------------------------------------------------------------------------------------
-%	Improving GrammarGuru suggestions 
+%	Improving GrammarGuru suggestions
 %----------------------------------------------------------------------------------------
 
 \section*{Improving GrammarGuru suggestions}
 
-GrammarGuru works greatly for insertions and deletions, however it rarely work when a token is changed, e.g when a keyword is mistyped, e.g \textbf{functions} rather than \textbf{function}. We improve GrammarGuru by training a NN that reevaluates and reranks GrammarGuru scores by using a modification of the features of the ranking system ROSE $[2]$:
+ We improve GrammarGuru by training a neural network that re-evaluates and re-ranks GrammarGuru's scores by using a modification of the features of the ROSE ranking system (Song and Cohn, 2011):
+
 \color{Black}
 \begin{center}
-\begin{tabular}{ |c|c|c| } 
+\begin{tabular}{ |c|c|c| }
  \hline
- \textbf{ID} & \textbf{Description}\\ 
+ \textbf{ID} & \textbf{Description}\\
  \hline
- 1-4 & n-gram precision, n=1...4\\ 
+ 1-4 & n-gram precision, n=1...4\\
  5-8 & n-gram recall, n=1...4 \\
  9-12 & n-gram f-measure, n=1...4 \\
  13 & average n-gram precision per code line\\
@@ -146,10 +156,14 @@ GrammarGuru works greatly for insertions and deletions, however it rarely work w
 \begin{center}
 \includegraphics[width=0.8\linewidth]{proj_img}
 \end{center}
-\section*{Evaluation and Reranking}
-15 of the most unnatural tokens in the erroneous JS file are taken, evaluated and reranked by using the ROSE approach. We perform $15 \choose^{2}$ comparisons per file....
-\\\\
-\textbf{WHAT ELSE :(}
+\section*{Re-ranking}
+15 of the most unnatural tokens in the erroneous JS file are fed to our neural network and re-ranked using the ROSE approach. We perform $15 \choose^{2}$ comparisons per file....
+
+%----------------------------------------------------------------------------------------
+%	Improving GrammarGuru suggestions
+%----------------------------------------------------------------------------------------
+
+\section*{Evaluation}
 
 \section*{References}
 \large
