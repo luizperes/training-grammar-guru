@@ -43,6 +43,7 @@ def check_syntax_throw(*, filename=None, **kwargs):
     if (status.returncode != 0):
         j = json.loads(status.stdout.decode('UTF-8'))
         err = SyntaxError.from_json(j)
+        print (err)
 
     return (err, status.returncode == 0)
 
