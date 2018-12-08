@@ -49,6 +49,8 @@
 
 \sectionfont{\fontsize{54}{54}\selectfont}
 
+\usepackage{caption}
+
 \begin{document}
 
 %----------------------------------------------------------------------------------------
@@ -161,19 +163,19 @@ GrammarGuru is a tool created by Santos et al. (Santos EA et al., 2017) that att
 %	Improving GrammarGuru suggestions
 %----------------------------------------------------------------------------------------
 
-\section*{Re-ranking Results}
-15 of the most unnatural tokens in the erroneous JS file are fed to our neural network and re-ranked using the ROSE approach.
+\section*{Re-ranking process and results}
+For each erroneous JS file, 15 of the most unnatural tokens are fed to our neural network and re-ranked using ROSE.
 \color{Black}
 \begin{algorithmic}
-\State $1$ \textincon{\$form.submit(functions(evt) \{} \tab \textit{\color{red} // mistyped keyword }\color{Black}
+\State $1$ \textincon{\$form.submit(\color{red}functions\color{Black}(evt) \{} \tab \textit{\color{red} // mistyped keyword }\color{Black}
 \State $2$ \tab\tab ...
 \State $3$ \textincon{\});}
 \end{algorithmic}
-\color{NavyBlue} Error message from GrammarGuru (2017):\\\color{Black}
+\color{NavyBlue} Output from GrammarGuru before re-ranking:\\\color{Black}
 \begin{tabular}{|p{37cm}}
 \tab \textincon{\textit{\color{red} I don't know how to fix it :C\color{Black}}}\\
 \end{tabular}
-\color{NavyBlue} Result after re-ranking:\\\color{Black}
+\color{NavyBlue} Output from GrammarGuru after re-ranking:\\\color{Black}
 \begin{tabular}{|p{37cm}}
 \tab \textincon{wrong.js:1:14 try substituting with} \textbf{'function'} \\
 \tab \textincon{\$form.submit(functions(evt) \{}\\
@@ -191,6 +193,8 @@ GrammarGuru is a tool created by Santos et al. (Santos EA et al., 2017) that att
  Substitution & 0.30 & \tab \\
  \hline
 \end{tabular}
+\\[6pt]
+\color{Black} mean reciprocal rank results
 \end{center}
 \color{Navy}
 \section*{References}
