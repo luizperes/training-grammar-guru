@@ -90,7 +90,7 @@ Parsers often fail miserably in helping to find syntax errors. For example:
 
 \color{Black}
 \begin{algorithmic}
-\State $1$ \textincon{\textbf{if} (process.argv.length $>$ 3)} \tab \textit{\color{red} // Missing '\{' }\color{Black}
+\State $1$ \textincon{\textbf{if} (process.argv.length $<$ 3)} \tab \textit{\color{red} // Missing '\{' }\color{Black}
 \State $2$ \tab\tab \textincon{console.error(\color{NavyBlue} 'Not enough args!'}\color{Black});
 \State $3$ \tab\tab \textincon{process.exit(1);}
 \State $4$ \textincon{\}}
