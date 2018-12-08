@@ -357,7 +357,7 @@ class Substitute:
         text = self.token.value
 
         next_token = self.tokens[pos]
-        msg = ("try replacing to '{t.bold}{text}{t.normal}' "
+        msg = ("try substituting with '{t.bold}{text}{t.normal}' "
                 "".format_map(locals()))
 
         line_tokens = get_token_line(self.pos, self.tokens)

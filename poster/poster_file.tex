@@ -156,15 +156,43 @@ GrammarGuru is a tool created by Santos et al. (Santos EA et al., 2017) that att
 \begin{center}
 \includegraphics[width=0.8\linewidth]{proj_img}
 \end{center}
-\section*{Re-ranking}
-15 of the most unnatural tokens in the erroneous JS file are fed to our neural network and re-ranked using the ROSE approach. We perform $15 \choose^{2}$ comparisons per file....
 
 %----------------------------------------------------------------------------------------
 %	Improving GrammarGuru suggestions
 %----------------------------------------------------------------------------------------
 
-\section*{Evaluation}
-
+\section*{Re-ranking Results}
+15 of the most unnatural tokens in the erroneous JS file are fed to our neural network and re-ranked using the ROSE approach.
+\color{Black}
+\begin{algorithmic}
+\State $1$ \textincon{\$form.submit(functions(evt) \{} \tab \textit{\color{red} // mistyped keyword }\color{Black}
+\State $2$ \tab\tab ...
+\State $3$ \textincon{\});}
+\end{algorithmic}
+\color{NavyBlue} Error message from GrammarGuru (2017):\\\color{Black}
+\begin{tabular}{|p{37cm}}
+\tab \textincon{\textit{\color{red} I don't know how to fix it :C\color{Black}}}\\
+\end{tabular}
+\color{NavyBlue} Result after re-ranking:\\\color{Black}
+\begin{tabular}{|p{37cm}}
+\tab \textincon{wrong.js:1:14 try substituting with} \textbf{'function'} \\
+\tab \textincon{\$form.submit(functions(evt) \{}\\
+\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab \textincon{\^{}}\\
+\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab \textincon{\textbf{function}}
+\end{tabular}
+\begin{center}
+\vspace{1cm}
+\begin{tabular}{ |c|c|c| }
+ \hline
+ \textbf{Mutation} & \textbf{GrammarGuru MRR} & \textbf{Our Solution MRR}\\
+ \hline
+ Insertion & 0.52 & \tab \\
+ Deletion & 0.50 & \tab \\
+ Substitution & 0.30 & \tab \\
+ \hline
+\end{tabular}
+\end{center}
+\color{Navy}
 \section*{References}
 \large
 $[1]$ \textbf{Santos EA, Campbell JC, Hindle A, Amaral JN. 2017}. Finding and correcting syntax errors using recurrent neural networks. PeerJ Preprints 5:e3123v1 https://doi.org/10.7287/peerj.preprints.3123v1
