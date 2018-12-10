@@ -1,0 +1,16 @@
+$anyIdentifier = "any-string" ; $anyIdentifier . ||| = "any-string" ; ( $anyIdentifier . ||| = "any-string" ; $anyIdentifier . $anyIdentifier
+$anyIdentifier = "any-string" ; $anyIdentifier . ||| = "any-string" ; ( $anyIdentifier . ||| = "any-string" ; $anyIdentifier . $anyIdentifier
+= "any-string" ; ( $anyIdentifier . ||| = "any-string" ; ( $anyIdentifier . ||| = "any-string" ; $anyIdentifier . $anyIdentifier
+$anyIdentifier . $anyIdentifier = ; $anyIdentifier ||| . $anyIdentifier = ; $anyIdentifier . ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+$anyIdentifier . $anyIdentifier = ; $anyIdentifier ||| . $anyIdentifier = ; $anyIdentifier . ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+. $anyIdentifier = ; $anyIdentifier . ||| . $anyIdentifier = ; $anyIdentifier . ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+$anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| $anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+$anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| $anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+$anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| . $anyIdentifier = "any-string" "any-string" ; ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+$anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| $anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+$anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| . $anyIdentifier = "any-string" "any-string" ; ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+$anyIdentifier = "any-string" "any-string" ; $anyIdentifier ||| . $anyIdentifier = "any-string" "any-string" ; ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+$anyIdentifier . $anyIdentifier . = "any-string" ||| . $anyIdentifier . = "any-string" ; ||| . $anyIdentifier . $anyIdentifier = "any-string"
+. $anyIdentifier = ^ "any-string" ; ||| . $anyIdentifier = ^ "any-string" ; ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+. $anyIdentifier = ^ "any-string" ; ||| $anyIdentifier . $anyIdentifier = ^ "any-string" ||| . $anyIdentifier = "any-string" ; $anyIdentifier
+. $anyIdentifier = ^ "any-string" ; ||| $anyIdentifier . $anyIdentifier = ^ "any-string" ||| . $anyIdentifier = "any-string" ; $anyIdentifier

@@ -1,0 +1,4 @@
+) { $anyIdentifier void ( "any-string" ||| ) { $anyIdentifier void ( "any-string" ||| ) { $anyIdentifier ( "any-string" )
+) { $anyIdentifier void ( "any-string" ||| 0 ) { $anyIdentifier void ( ||| ) { $anyIdentifier ( "any-string" )
+) { $anyIdentifier void ( "any-string" ||| 0 ) { $anyIdentifier void ( ||| ) { $anyIdentifier ( "any-string" )
+( 0 !== ) { $anyIdentifier ||| if ( 0 !== ) { ||| ( 0 !== 0 ) {

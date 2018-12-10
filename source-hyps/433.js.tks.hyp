@@ -1,0 +1,4 @@
+| 0 ) $anyIdentifier ; return ||| | 0 ) $anyIdentifier ; return ||| | 0 ) % $anyIdentifier ;
+| 0 ) $anyIdentifier ; return ||| | 0 ) $anyIdentifier ; return ||| | 0 ) % $anyIdentifier ;
+| 0 ) $anyIdentifier ; return ||| | 0 ) $anyIdentifier ; return ||| | 0 ) % $anyIdentifier ;
+: [ "any-string" >>>= , "any-string" ||| : [ "any-string" >>>= , "any-string" ||| : [ "any-string" , "any-string" ,

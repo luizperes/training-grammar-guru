@@ -1,0 +1,13 @@
+= 0 == ; $anyIdentifier < ||| $anyIdentifier = 0 == ; $anyIdentifier ||| $anyIdentifier = 0 ; $anyIdentifier <
+; $anyIdentifier < ; $anyIdentifier ++ ||| 0 ; $anyIdentifier < ; $anyIdentifier ||| ; $anyIdentifier < $anyIdentifier ; $anyIdentifier
+. $anyIdentifier || $anyIdentifier $anyIdentifier . ||| . $anyIdentifier || $anyIdentifier $anyIdentifier . ||| $anyIdentifier || $anyIdentifier . $anyIdentifier .
+) { throw "any-string" new $anyIdentifier ||| ) { throw "any-string" new $anyIdentifier ||| ) { throw new $anyIdentifier (
+) { throw "any-string" new $anyIdentifier ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
+) { throw "any-string" new $anyIdentifier ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
+) { throw "any-string" new $anyIdentifier ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
+) { throw "any-string" new $anyIdentifier ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
+) { throw "any-string" new $anyIdentifier ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
+) { throw "any-string" new $anyIdentifier ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
+{ throw "any-string" new $anyIdentifier ( ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
+{ throw "any-string" new $anyIdentifier ( ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
+{ throw "any-string" new $anyIdentifier ( ||| { throw "any-string" new $anyIdentifier ( ||| ) { throw new $anyIdentifier (
