@@ -6,17 +6,27 @@ import detect
 import test_tool
 from unvocabularize import unvocabularize
 from vocabulary import vocabulary
+import itertools
 
 def predict(common, secret, min_rank):
     fixes = detect.suggest(common=common,
                            mutate=True,
                         min_rank=min_rank)
-    s = set()
-    if fixes:
-        for fix in fixes:
-            s = s | { fix.rank_score }
-        
-    return (None, None)
+
+    h1h2ref = None
+    values  = None
+    if fixes and len(fixes) > 1:
+        h1h2ref = []
+        values  = [] 
+        all_combinations = list(itertools.combinations(fixes, 2))
+        for (f1, f2) in all_combinations:
+            hyp1 = detect.tokens_to_source_code(f1.tokens[f1.pos-3:f1.pos+3])
+            hyp2 = detect.tokens_to_source_code(f2.tokens[f2.pos-3:f2.pos+3])
+            ref  = detect.tokens_to_source_code(secret.window)
+            h1h2ref.append(hyp1 + '|||' + hyp2 + '|||' + ref + '\n')
+
+
+    return (h1h2ref, values)
 
 def convert_file_to_tokens(*, src=None, out=None, iter=None,
                            min_rank=None, max_size=None, **kwargs):

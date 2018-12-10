@@ -398,6 +398,9 @@ class Fixes:
     def __bool__(self):
         return len(self.fixes) > 0
 
+    def __len__(self):
+        return len(self.fixes)
+
     def __iter__(self):
         return iter(self.fixes)
 
