@@ -66,16 +66,16 @@ def mutate(fStr):
         tokens = detect.tokenize_file(f)
     return (tokens, operation)
 
-def predict(common, secret):
+def predict(common, secret, min_rank):
     # TODO: separate true fix, valid fix and no fix using the secret! :)
-    fixes = detect.suggest(common=common, test=True)
+    fixes = detect.suggest(common=common, test=True, min_rank=min_rank)
     if not fixes:
         return 0
     else:
         for fix in fixes:
             return fix.rank_score
 
-def test(*, db=None, n=None, reset=None, iter=None, **kwargs):
+def test(*, db=None, n=None, reset=None, iter=None, min_rank=None, **kwargs):
     ranks = np.zeros(n)
 
     if reset:
@@ -98,7 +98,7 @@ def test(*, db=None, n=None, reset=None, iter=None, **kwargs):
         for i in range(0, iter):
             (mutant, secret) = mutate(fStr)
             common = get_common(mutant, file)
-            ranks_file.append(predict(common, secret))
+            ranks_file.append(predict(common, secret, min_rank))
         rank_file = detect.mean_reciprocal_rank2(ranks_file)
         ranks[idx] = rank_file
         print('Rank MRR ' + file + ':', rank_file)
@@ -112,6 +112,8 @@ def add_common_args(parser):
                         default=1, dest='n')
     parser.add_argument('--iter', type=int,
                         default=5)
+    parser.add_argument('--min-rank', type=int,
+                        default=3, dest='min_rank')
     parser.add_argument('--reset', type=bool,
                         default=False)
 
