@@ -414,7 +414,7 @@ def id_to_token(token_id):
         return tokenize_file(file_obj)[0]
 
 
-def suggest(common=None, test=False, min_rank=None, **kwargs):
+def suggest(common=None, test=False, mutate=False, min_rank=None, **kwargs):
     if common is None:
         common = common_args(**kwargs)
 
@@ -473,8 +473,11 @@ def suggest(common=None, test=False, min_rank=None, **kwargs):
         fixes.try_substitute(pos, likely_prev, rank_score)
 
         # if we found a fix we don't care anymore
-        if (fixes):
+        if (fixes and not mutate):
             break
+
+    if mutate:
+        return (least_agreements, fixes)
 
     if test:
         return fixes
