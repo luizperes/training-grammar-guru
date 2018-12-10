@@ -21,7 +21,7 @@ weights_forwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.5.h5')
 weights_backwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.backwards.5.h5')
 
 TKOperation = namedtuple('TKOperation',
-                        'old_token position op')
+                        'window old_token pos op')
 
 def get_common(tokens, filename):
     file_vector = detect.vectorize_tokens(tokens)
@@ -52,7 +52,7 @@ def mutate(fStr):
         with detect.synthetic_file(fStr) as f:
             tokens = detect.tokenize_file(f)
         pos = (r[2] % (len(tokens) - 2)) + 1
-        operation = TKOperation(tokens[pos], pos, op)
+        operation = TKOperation(tokens[pos-3:pos+3], tokens[pos], pos, op)
         if (op == 0): # insert token
             tokens.insert(pos, tk)
         elif (op == 1): # delete token
