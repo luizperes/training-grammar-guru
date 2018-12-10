@@ -1,0 +1,7 @@
+{ $anyIdentifier ( , $anyIdentifier . ||| { $anyIdentifier ( , $anyIdentifier . ||| { $anyIdentifier ( "any-string" , $anyIdentifier
+( $anyIdentifier . , $anyIdentifier ) ||| ( $anyIdentifier . , $anyIdentifier ) ||| ( $anyIdentifier . $anyIdentifier , $anyIdentifier
+( $anyIdentifier . , $anyIdentifier ) ||| $anyIdentifier ( $anyIdentifier . , $anyIdentifier ||| ( $anyIdentifier . $anyIdentifier , $anyIdentifier
+( $anyIdentifier . , $anyIdentifier ) ||| $anyIdentifier ( $anyIdentifier . , $anyIdentifier ||| ( $anyIdentifier . $anyIdentifier , $anyIdentifier
+"any-string" , $anyIdentifier . $anyIdentifier ( ||| $anyIdentifier ( "any-string" , $anyIdentifier . ||| ; } ) ) ; }
+) { $anyIdentifier function . $anyIdentifier ||| ) { $anyIdentifier function . $anyIdentifier ||| ) { $anyIdentifier . $anyIdentifier (
+( $anyIdentifier , $anyIdentifier { $anyIdentifier ||| $anyIdentifier , $anyIdentifier { $anyIdentifier ( ||| $anyIdentifier , $anyIdentifier ) { $anyIdentifier

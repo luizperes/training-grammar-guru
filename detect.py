@@ -24,12 +24,12 @@ import sys
 import tempfile
 
 from pathlib import Path
-from itertools import islice
+from itertools import islice, combinations
 from collections import namedtuple
 from functools import total_ordering
 
 import numpy as np
-from keras.models import model_from_json, model_from_yaml
+from keras.models import model_from_json, model_from_yaml, load_model
 from blessings import Terminal
 
 from unvocabularize import unvocabularize
@@ -37,6 +37,7 @@ from vectorize_tokens import vectorize_tokens
 from corpus import Token
 from vocabulary import vocabulary
 from training_utils import Sentences, one_hot_batch
+from neural_network.make_features import get_ngrams, rsw
 
 import os
 import tensorflow as tf
@@ -56,7 +57,7 @@ PREFIX_LENGTH = SENTENCE_LENGTH - 1
 
 Common = namedtuple('Common',
                     'forwards_model backwards_model file_vector tokens '
-                    'filename')
+                    'filename rerank_model')
 
 
 @total_ordering
@@ -165,10 +166,9 @@ def mean_reciprocal_rank(ranks):
 def mean_reciprocal_rank2(ranks):
     return sum(rank for rank in ranks) / len(ranks)
 
-
 def common_args(*, filename=None,
                 architecture=None,
-                weights_forwards=None, weights_backwards=None,
+                weights_forwards=None, weights_backwards=None, rerank_model=None,
                 **kwargs):
     assert architecture.exists()
     assert weights_forwards.exists()
@@ -183,9 +183,10 @@ def common_args(*, filename=None,
     backwards_model = Model.from_filenames(architecture=str(architecture),
                                            weights=str(weights_backwards),
                                            backwards=True)
+    trerank_model = load_model(str(rerank_model))
 
     return Common(forwards_model, backwards_model, file_vector,
-                  tokens, filename)
+                  tokens, filename, trerank_model)
 
 
 def top_5(*, forwards=None, **kwargs):
@@ -416,6 +417,90 @@ def id_to_token(token_id):
     with synthetic_file(vocabulary.to_text(token_id)) as file_obj:
         return tokenize_file(file_obj)[0]
 
+def which_order(el):
+    (h1, h2, el) = el
+    if el == -1:
+        return h2
+    else:
+        return h1
+
+def resort(agreements, min_rank, tokens, rerank_model, forwards_predictions, backwards_predictions):
+    all_combinations = list(combinations(agreements[:min_rank], 2))
+    res = []
+    for (d1, d2) in all_combinations:
+        pos1 = SENTENCE_LENGTH + d1.index
+        pos2 = SENTENCE_LENGTH + d2.index
+
+        try:
+            likely_next2 = id_to_token(forwards_predictions[pos2])
+            likely_prev2 = id_to_token(backwards_predictions[pos2])
+        except:
+            b = (d1, d2, 1)
+            res.append(b)
+            continue
+
+        try:
+            likely_next1 = id_to_token(forwards_predictions[pos1])
+            likely_prev1 = id_to_token(backwards_predictions[pos1])
+        except:
+            b = (d1, d2, -1)
+            res.append(b)
+            continue
+
+        suggestionDele1 = tokens_to_source_code(tokens[:pos1] + tokens[pos1 + 1:])
+        suggestionInsN1 = tokens_to_source_code(tokens[:pos1] + [likely_next1] + tokens[pos1:])
+        suggestionInsP1 = tokens_to_source_code(tokens[:pos1] + [likely_prev1] + tokens[pos1:])
+        suggestionSubN1 = tokens_to_source_code(tokens[:pos1] + [likely_next1] + tokens[pos1 + 1:])
+        suggestionSubP1 = tokens_to_source_code(tokens[:pos1] + [likely_prev1] + tokens[pos1 + 1:])
+        suggestionDele2 = tokens_to_source_code(tokens[:pos2] + tokens[pos2 + 1:])
+        suggestionInsN2 = tokens_to_source_code(tokens[:pos2] + [likely_next2] + tokens[pos2:])
+        suggestionInsP2 = tokens_to_source_code(tokens[:pos2] + [likely_prev2] + tokens[pos2:])
+        suggestionSubN2 = tokens_to_source_code(tokens[:pos2] + [likely_next2] + tokens[pos2 + 1:])
+        suggestionSubP2 = tokens_to_source_code(tokens[:pos2] + [likely_prev2] + tokens[pos2 + 1:])
+        faulty = tokens_to_source_code(tokens)
+
+        sugList = [(suggestionDele1, suggestionDele2),
+                   (suggestionInsN1, suggestionInsN2),
+                   (suggestionSubP1, suggestionInsP2),
+                   (suggestionSubN1, suggestionSubN2),
+                   (suggestionSubP1, suggestionSubP2)]
+
+        diff = np.array([[0] * 27])
+        for (h1, h2) in sugList:
+            vc1, vc2  = [0] * 14, [0] * 14
+            sw1, sw2 = [0] * 13, [0] * 13
+            (vc1, vc2) = get_ngrams(faulty, h1, h2, vc1, vc2, True) 
+            (sw1, sw2) = get_ngrams(rsw(faulty), rsw(h1), rsw(h2), sw1, sw2, False)
+            vc1.extend(sw1)
+            vc2.extend(sw2)
+            diff = np.add(diff, list(np.subtract(vc1, vc2)))
+
+        predictions= rerank_model.predict(diff)
+        for prediction in predictions:
+            best_index=-1
+            best_score=-1
+            for index in range(len(prediction)):
+                if prediction[index]>best_score:
+                    best_score=prediction[index]
+                    best_index=index
+            if best_index==0:
+                print (str(1))
+                v = 1
+            elif best_index==1:
+                print (str(0))
+                v = 0
+            else:
+                print (str(-1))
+                v = -1
+        aux = (d1, d2, v)
+        res.append(aux)
+
+    theOrder = res.sort(key=which_order)
+    if theOrder is None:
+        return agreements
+
+    for (h1, h2, o) in theOrder[:3]:
+        yield h2 if o == -1 else h1
 
 def suggest(common=None, test=False, mutate=False, min_rank=None, **kwargs):
     if common is None:
@@ -457,7 +542,15 @@ def suggest(common=None, test=False, mutate=False, min_rank=None, **kwargs):
 
     # For the top disagreements, synthesize fixes.
     least_agreements.sort()
-    for idx, disagreement in enumerate(least_agreements[:min_rank]):
+    if not mutate and not test:
+        resort(least_agreements,
+               min_rank,
+               common.tokens,
+               common.rerank_model,
+               forwards_predictions,
+               backwards_predictions)
+
+    for idx, disagreement in enumerate(least_agreements):
         rank_score = 1/(idx + 1)
 
         pos = disagreement.index
@@ -649,6 +742,10 @@ def add_common_args(parser):
     parser.add_argument('--weights-backwards', type=Path,
                         default=THIS_DIRECTORY /
                         'javascript-tiny.backwards.5.h5')
+    parser.add_argument('--rerank-model', type=Path,
+                        default=THIS_DIRECTORY /
+                        'neural_network/wow')
+                        
     parser.add_argument('--min-rank', type=int, default=3, dest='min_rank')
 
 

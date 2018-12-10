@@ -1,0 +1,11 @@
+( $anyIdentifier . continue $anyIdentifier ( ||| $anyIdentifier . continue $anyIdentifier ( { ||| ( $anyIdentifier . $anyIdentifier ( {
+; $anyIdentifier . >>= $anyIdentifier ( ||| ; $anyIdentifier . >>= $anyIdentifier ( ||| ; $anyIdentifier . $anyIdentifier ( $anyIdentifier
+; $anyIdentifier . >>= $anyIdentifier ( ||| ) ; $anyIdentifier . >>= $anyIdentifier ||| ; $anyIdentifier . $anyIdentifier ( $anyIdentifier
+; $anyIdentifier . >>= $anyIdentifier ( ||| ) ; $anyIdentifier . >>= $anyIdentifier ||| ; $anyIdentifier . $anyIdentifier ( $anyIdentifier
+) ) ; var $anyIdentifier = ||| ) ) ; var $anyIdentifier = ||| "any-string" ) ; var $anyIdentifier =
+) ) ; var $anyIdentifier = ||| ) ) ; $anyIdentifier . $anyIdentifier ||| "any-string" ) ; var $anyIdentifier =
+) ) ; var $anyIdentifier = ||| ) ) ; $anyIdentifier . $anyIdentifier ||| "any-string" ) ; var $anyIdentifier =
+; $anyIdentifier . <= $anyIdentifier ( ||| ; $anyIdentifier . <= $anyIdentifier ( ||| ; $anyIdentifier . $anyIdentifier ( "any-string"
+; $anyIdentifier . <= $anyIdentifier ( ||| ) ; $anyIdentifier . <= $anyIdentifier ||| ; $anyIdentifier . $anyIdentifier ( "any-string"
+; $anyIdentifier . <= $anyIdentifier ( ||| ) ; $anyIdentifier . <= $anyIdentifier ||| ; $anyIdentifier . $anyIdentifier ( "any-string"
+$anyIdentifier = $anyIdentifier null ( "any-string" ||| var $anyIdentifier = $anyIdentifier null ( ||| $anyIdentifier = $anyIdentifier ( "any-string" )

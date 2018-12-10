@@ -77,6 +77,8 @@ def convert_file_to_tokens(*, src=None, out=None, iter=None,
             lst_files.append(filename)
 
     for idx, file in enumerate(lst_files):
+        if idx < 45:
+            continue
         print('idx ' + str(idx))
         with open(str(src) + '/' + file, 'r') as f:
             fStr = f.read()
@@ -102,7 +104,7 @@ def add_common_args(parser):
     parser.add_argument('--min-rank', type=int,
                         default=15, dest='min_rank')
     parser.add_argument('--max-size', type=int,
-                        default=10000, dest='max_size')
+                        default=1000, dest='max_size')
 
 parser = argparse.ArgumentParser()
 add_common_args(parser)
