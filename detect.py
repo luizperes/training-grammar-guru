@@ -476,10 +476,7 @@ def suggest(common=None, test=False, mutate=False, min_rank=None, **kwargs):
         if (fixes and not mutate):
             break
 
-    if mutate:
-        return (least_agreements, fixes)
-
-    if test:
+    if test or mutate:
         return fixes
 
     if not fixes:
