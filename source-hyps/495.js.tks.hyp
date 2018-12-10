@@ -1,0 +1,12 @@
+( "any-string" ) $anyIdentifier ; $anyIdentifier ||| ( "any-string" ) $anyIdentifier ; $anyIdentifier ||| ( "any-string" ) ; $anyIdentifier (
+( "any-string" ) $anyIdentifier ; $anyIdentifier ||| ( "any-string" ) $anyIdentifier ; $anyIdentifier ||| ( "any-string" ) ; $anyIdentifier (
+( "any-string" ) $anyIdentifier ; $anyIdentifier ||| ( "any-string" ) $anyIdentifier ; $anyIdentifier ||| ( "any-string" ) ; $anyIdentifier (
+( "any-string" ) $anyIdentifier ( "any-string" ||| ( "any-string" ) $anyIdentifier ( "any-string" ||| ( "any-string" ) ; $anyIdentifier (
+( "any-string" ) $anyIdentifier ( "any-string" ||| ( "any-string" ) $anyIdentifier ( "any-string" ||| ( "any-string" ) ; $anyIdentifier (
+( "any-string" ) $anyIdentifier ( "any-string" ||| ( "any-string" ) $anyIdentifier ( "any-string" ||| ( "any-string" ) ; $anyIdentifier (
+"any-string" ) ; $anyIdentifier "any-string" ) ||| ) ; $anyIdentifier "any-string" ) ; ||| ) ; $anyIdentifier ( "any-string" )
+"any-string" ) ; $anyIdentifier "any-string" ) ||| ) ; $anyIdentifier "any-string" ) ; ||| ) ; $anyIdentifier ( "any-string" )
+) ; $anyIdentifier "any-string" ) ; ||| ) ; $anyIdentifier "any-string" ) ; ||| ) ; $anyIdentifier ( "any-string" )
+$anyIdentifier >>>= "any-string" ) ; $anyIdentifier ||| $anyIdentifier >>>= "any-string" ) ; $anyIdentifier ||| ) ; $anyIdentifier ( "any-string" )
+$anyIdentifier >>>= "any-string" ) ; $anyIdentifier ||| ( "any-string" ) ; $anyIdentifier >>>= ||| ) ; $anyIdentifier ( "any-string" )
+$anyIdentifier >>>= "any-string" ) ; $anyIdentifier ||| ( "any-string" ) ; $anyIdentifier >>>= ||| ) ; $anyIdentifier ( "any-string" )

@@ -1,0 +1,11 @@
+, $anyIdentifier , , $anyIdentifier ) ||| , $anyIdentifier , , $anyIdentifier ) ||| , $anyIdentifier , $anyIdentifier , $anyIdentifier
+, $anyIdentifier , , $anyIdentifier ) ||| $anyIdentifier , $anyIdentifier , , $anyIdentifier ||| , $anyIdentifier , $anyIdentifier , $anyIdentifier
+, $anyIdentifier , , $anyIdentifier ) ||| $anyIdentifier , $anyIdentifier , , $anyIdentifier ||| , $anyIdentifier , $anyIdentifier , $anyIdentifier
+) { $anyIdentifier false ; } ||| ) { $anyIdentifier false ; } ||| ) { $anyIdentifier = false ;
+( typeof $anyIdentifier && == "any-string" ||| typeof $anyIdentifier && == "any-string" ) ||| ( typeof $anyIdentifier == "any-string" )
+( typeof $anyIdentifier && == "any-string" ||| typeof $anyIdentifier && == "any-string" ) ||| ( typeof $anyIdentifier == "any-string" )
+typeof $anyIdentifier && == "any-string" ) ||| typeof $anyIdentifier && == "any-string" ) ||| ( typeof $anyIdentifier == "any-string" )
+} else if typeof $anyIdentifier == ||| } else if typeof $anyIdentifier == ||| } else if ( typeof $anyIdentifier
+( $anyIdentifier & , $anyIdentifier , ||| ( $anyIdentifier & , $anyIdentifier , ||| $anyIdentifier ( $anyIdentifier , $anyIdentifier ,
+( $anyIdentifier & , $anyIdentifier , ||| $anyIdentifier ( $anyIdentifier & , $anyIdentifier ||| $anyIdentifier ( $anyIdentifier , $anyIdentifier ,
+( $anyIdentifier & , $anyIdentifier , ||| $anyIdentifier ( $anyIdentifier & , $anyIdentifier ||| $anyIdentifier ( $anyIdentifier , $anyIdentifier ,

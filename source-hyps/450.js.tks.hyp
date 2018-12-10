@@ -1,0 +1,6 @@
+$anyIdentifier ( "any-string" ; function $anyIdentifier ||| = $anyIdentifier ( "any-string" ; function ||| $anyIdentifier ( "any-string" ) ; function
+) { var , $anyIdentifier ; ||| ) { var , $anyIdentifier ; ||| ) { var $anyIdentifier , $anyIdentifier
+"any-string" ) . ^ $anyIdentifier ( ||| "any-string" ) . ^ $anyIdentifier ( ||| "any-string" ) . $anyIdentifier ( )
+{ var $anyIdentifier , ; $anyIdentifier ||| var $anyIdentifier , ; $anyIdentifier = ||| var $anyIdentifier , $anyIdentifier ; $anyIdentifier
+{ var $anyIdentifier , ; $anyIdentifier ||| var $anyIdentifier , ; $anyIdentifier = ||| var $anyIdentifier , $anyIdentifier ; $anyIdentifier
+var $anyIdentifier , ; $anyIdentifier = ||| var $anyIdentifier , ; $anyIdentifier = ||| var $anyIdentifier , $anyIdentifier ; $anyIdentifier
