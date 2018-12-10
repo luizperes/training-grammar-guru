@@ -21,7 +21,7 @@ weights_forwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.5.h5')
 weights_backwards = str(detect.THIS_DIRECTORY / 'javascript-tiny.backwards.5.h5')
 
 TKOperation = namedtuple('TKOperation',
-                        'window old_token position op')
+                        'window old_token pos op')
 
 def get_common(tokens, filename):
     file_vector = detect.vectorize_tokens(tokens)
