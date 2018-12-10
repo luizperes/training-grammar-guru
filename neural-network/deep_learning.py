@@ -20,13 +20,9 @@ seed = 7
 np.random.seed(seed)
 
 dftrain = pd.read_csv('feature_values.csv')
-dftest = pd.read_csv('feature_values_test.csv')
 dataset_train = dftrain.values
-dataset_test = dftest.values
 X_train = dataset_train[:, 0:27].astype(float)
 Y_train = dataset_train[:, 27].astype(int)
-
-X_test = dataset_test[:, :].astype(float)
 
 cat_y= []
 for y in Y_train:
@@ -48,18 +44,18 @@ model.add(Dense(3, activation='softmax' ))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 model.fit(X_train, dummy_y, epochs=30, batch_size= 100, verbose=False)
-
-predictions= model.predict(X_test)
-for prediction in predictions:
-    best_index=-1
-    best_score=-1
-    for index in range(len(prediction)):
-        if prediction[index]>best_score:
-            best_score=prediction[index]
-            best_index=index
-    if best_index==0:
-        print (str(1))
-    elif best_index==1:
-        print (str(0))
-    else:
-        print (str(-1))
+model.save_weights('nn_weights.h5')
+# predictions= model.predict(X_test)
+# for prediction in predictions:
+#     best_index=-1
+#     best_score=-1
+#     for index in range(len(prediction)):
+#         if prediction[index]>best_score:
+#             best_score=prediction[index]
+#             best_index=index
+#     if best_index==0:
+#         print (str(1))
+#     elif best_index==1:
+#         print (str(0))
+#     else:
+#         print (str(-1))

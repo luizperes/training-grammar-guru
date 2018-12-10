@@ -4,14 +4,14 @@ from itertools import islice # slicing for iterators
 import numpy as np
 from itertools import chain
 import string
-import nltk
+#import nltk
 import sys
 import csv
 
 parser = argparse.ArgumentParser(description='Evaluate translation hypotheses.')
-parser.add_argument('-i', '--input', default='./blah/newfile.hyp', help='input file (default data/hyp1-hyp2-ref)')
-parser.add_argument('-r', '--truth', default='./blah/newfile.ans', help='input file (default data/hyp1-hyp2-ref)')
-parser.add_argument('-m', '--model', default='./ngrams', help='input file (model)')
+parser.add_argument('-i', '--input', default='./source-hyps/h1h2ref.hyp', help='input file (default data/hyp1-hyp2-ref)')
+parser.add_argument('-r', '--truth', default='./source-hyps/h1h2ref.ans', help='input file (default data/hyp1-hyp2-ref)')
+parser.add_argument('-m', '--model', default='./ngrams/ngrams', help='input file (model)')
 parser.add_argument('-n', '--num_sentences', default=None, type=int, help='Number of hypothesis pairs to evaluate')
 parser.add_argument('-a', '--alpha', default=0.1, type=float, help='Number of hypothesis pairs to evaluate')
 parser.add_argument('-b', '--beta', default=3.0, type=float, help='Number of hypothesis pairs to evaluate')
@@ -92,7 +92,7 @@ for words, count in get_model():
 wt = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.5, 0.5, 0.5, 0.5, 0.5, 0.1,
        0.275, 0.275, 0.275, 0.275, 0.275, 0.275, 0.275, 0.275, 0.275, 0.275, 0.275, 0.275, 0.275]
 
-mat = np.zeros(shape=(43, 28))
+mat = np.zeros(shape=(149, 28))
 
 header = ['f0', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9',
           'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17', 'f18', 'f19',
@@ -116,7 +116,7 @@ for n, (h1, h2, e) in enumerate(islice(sentences(), opts.num_sentences)):
     diff.append(truth[n])
     mat[n]=diff
 
-with open('feature_values_test.csv', 'wb') as f:
+with open('feature_values.csv', 'wb') as f:
     writer = csv.writer(f)
     writer.writerow(header)
     writer.writerows(mat)
